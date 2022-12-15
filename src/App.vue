@@ -180,10 +180,12 @@ export default {
       ticker: "",
       tickers: [],
       selectedTicker: null,
-      apiKey: "",
+      apiKey:
+        "20ec8e96925186e23c6a7468ca612470ad6ba7ca1b5e6ae3fa7e85e065a1bd46",
       graph: [],
       filter: "",
       page: 1,
+      coinList: [],
     };
   },
 
@@ -228,6 +230,24 @@ export default {
         page: this.page,
       };
     },
+  },
+
+  async mounted() {
+    const coinList = async () => {
+      return await fetch(
+        "https://min-api.cryptocompare.com/data/blockchain/list",
+        {
+          method: "GET",
+          headers: {
+            authorization:
+              "20ec8e96925186e23c6a7468ca612470ad6ba7ca1b5e6ae3fa7e85e065a1bd46",
+          },
+        }
+      ).then((data) => data.json().then((result) => result));
+    };
+
+    // this.coinList = Object.keys(coinList.Data);
+    console.log(await coinList());
   },
 
   created() {
