@@ -1,22 +1,22 @@
 <template>
   <section class="relative">
-    <!-- <h3 class="text-lg leading-6 font-medium text-gray-900 my-8">
-      {{ selectedTicker.name }} - USD
-    </h3> -->
+    <h3 class="text-lg leading-6 font-medium text-gray-900 my-8">
+      {{ name }} - USD
+    </h3>
     <div
       class="flex items-end border-gray-600 border-b border-l h-64"
       ref="graph"
       id="asd"
     >
       <div
-        v-for="(bar, idx) in graph"
+        v-for="(bar, idx) in normalizedGraph"
         :key="idx"
         :style="{ height: `${bar}%` }"
         class="bg-purple-800 border w-10"
       ></div>
     </div>
     <button
-      @click="selectedTicker = null"
+      @click="closeGraphView"
       type="button"
       class="absolute top-0 right-0"
     >
@@ -58,10 +58,14 @@ export default {
       //   required: true,
       //   default: new Array(),
     },
+    name: {
+      type: String,
+    },
   },
 
   mounted() {
     window.addEventListener("resize", this.calculateMaxGraphElements);
+    this.calculateMaxGraphElements();
   },
 
   beforeUnmount() {
@@ -69,11 +73,44 @@ export default {
   },
 
   methods: {
+    closeGraphView() {
+      this.$emit("close-graph-view");
+    },
     calculateMaxGraphElements() {
       if (!this.$refs.graph) {
         return;
       }
       this.maxGraphElements = Math.trunc(this.$refs.graph.clientWidth / 38);
+    },
+  },
+
+  watch: {
+    name() {
+      this.calculateMaxGraphElements();
+    },
+  },
+
+  computed: {
+    normalizedGraph() {
+      const maxValue = Math.max(...this.graph);
+      const minValue = Math.min(...this.graph);
+
+      if (maxValue === minValue) {
+        return this.graph.map(() => 50);
+      }
+
+      let resultGraph = this.graph;
+
+      if (this.graph.length > this.maxGraphElements) {
+        resultGraph = this.graph.slice(
+          this.graph.length - this.maxGraphElements,
+          this.graph.length
+        );
+      }
+      console.log("graph", this.graph);
+      return resultGraph.map(
+        (price) => 5 + ((price - minValue) * 95) / (maxValue - minValue)
+      );
     },
   },
 };

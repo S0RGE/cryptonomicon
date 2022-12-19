@@ -41,7 +41,9 @@
             CHD
           </span>
         </div>
-        <div class="text-sm text-red-600">Такой тикер уже добавлен</div>
+        <div style="display: none" class="text-sm text-red-600">
+          Такой тикер уже добавлен
+        </div>
       </div>
     </div>
     <add-button :disabled="disabled" @click="add" class="my-4" />
