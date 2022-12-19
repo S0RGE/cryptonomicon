@@ -1,7 +1,11 @@
 <template>
   <div class="container mx-auto flex flex-col items-center bg-gray-100 p-4">
     <div class="container">
-      <add-ticker @add-ticker="add" :disabled="tooManyTickers" />
+      <add-ticker
+        @add-ticker="add"
+        :disabled="tooManyTickers"
+        :duplicateCoinError="duplicateCoinError"
+      />
       <button
         @click="page = page - 1"
         v-if="page > 1"
@@ -88,6 +92,7 @@ export default {
       graph: [],
       filter: "",
       page: 1,
+      duplicateCoinError: false,
     };
   },
   components: { AddTicker, CryptoGraph },
@@ -185,6 +190,14 @@ export default {
     },
 
     add(ticker) {
+      if (this.tickers.find((el) => el.name === ticker)) {
+        this.duplicateCoinError = true;
+        setTimeout(() => {
+          this.duplicateCoinError = false;
+        }, 5000);
+        return;
+      }
+
       const currentTicker = { name: ticker, price: "-" };
       this.tickers = [...this.tickers, currentTicker];
 

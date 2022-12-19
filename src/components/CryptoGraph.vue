@@ -107,7 +107,6 @@ export default {
           this.graph.length
         );
       }
-      console.log("graph", this.graph);
       return resultGraph.map(
         (price) => 5 + ((price - minValue) * 95) / (maxValue - minValue)
       );
