@@ -2,6 +2,7 @@ const API_KEY = process.env.VUE_APP_API_KEY;
 const WS_BASE_URL = "wss://streamer.cryptocompare.com/v2";
 const API_BASE_URL = "https://min-api.cryptocompare.com";
 const AGGREGATE_INDEX = "5";
+
 const tickersHandler = new Map();
 
 const socket = new WebSocket(`${WS_BASE_URL}?api_key=${API_KEY}`);
@@ -64,9 +65,11 @@ export const unsubscribeFromTicker = (ticker) => {
 };
 
 export const getAllCoinNames = async () => {
-  return await fetch(
+  const coinNames = await fetch(
     `${API_BASE_URL}/data/blockchain/list?api_key=${API_KEY}`
   ).then((prom) => prom.json());
+  localStorage.setItem("checkCoins", JSON.stringify(coinNames));
+  return coinNames;
 };
 
 export const closeWSConnection = () => {

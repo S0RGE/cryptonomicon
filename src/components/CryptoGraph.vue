@@ -6,14 +6,22 @@
     <div
       class="flex items-end border-gray-600 border-b border-l h-64"
       ref="graph"
-      id="asd"
     >
       <div
         v-for="(bar, idx) in normalizedGraph"
         :key="idx"
-        :style="{ height: `${bar}%` }"
+        :style="{
+          height: `${bar}%`,
+          backgroundColor:
+            normalizedGraph[idx - 1] <= normalizedGraph[idx]
+              ? '#553c9a' //puprle-800
+              : '#9b2c2c', //red-800
+          writingMode: 'vertical-rl',
+        }"
         class="bg-purple-800 border w-10"
-      ></div>
+      >
+        <!-- {{ bufferedGraph[idx] }} -->
+      </div>
     </div>
     <button
       @click="closeGraphView"
@@ -91,14 +99,7 @@ export default {
   },
 
   computed: {
-    normalizedGraph() {
-      const maxValue = Math.max(...this.graph);
-      const minValue = Math.min(...this.graph);
-
-      if (maxValue === minValue) {
-        return this.graph.map(() => 50);
-      }
-
+    bufferedGraph() {
       let resultGraph = this.graph;
 
       if (this.graph.length > this.maxGraphElements) {
@@ -107,7 +108,17 @@ export default {
           this.graph.length
         );
       }
-      return resultGraph.map(
+      return resultGraph;
+    },
+    normalizedGraph() {
+      const maxValue = Math.max(...this.graph);
+      const minValue = Math.min(...this.graph);
+
+      if (maxValue === minValue) {
+        return this.graph.map(() => 50);
+      }
+
+      return this.bufferedGraph.map(
         (price) => 5 + ((price - minValue) * 95) / (maxValue - minValue)
       );
     },

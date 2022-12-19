@@ -65,8 +65,14 @@ export default {
   },
 
   async mounted() {
-    const { Data } = await getAllCoinNames();
-    this.coinNames = Object.keys(Data);
+    // Для удаления лишних запросов к API(ограниченое количество)
+    if (localStorage.getItem("coinNames")) {
+      this.coinNames = JSON.parse(localStorage.getItem("coinNames"));
+    } else {
+      const coinNameobject = (await getAllCoinNames()).Data;
+      this.coinNames = Object.keys(coinNameobject);
+      localStorage.setItem("coinNames", JSON.stringify(this.coinNames));
+    }
   },
 
   emits: {
