@@ -1,11 +1,8 @@
 <template>
   <div class="container mx-auto flex flex-col items-center bg-gray-100 p-4">
     <div class="container">
-      <add-ticker
-        @add-ticker="add"
-        :disabled="tooManyTickers"
-        :duplicateCoinError="duplicateCoinError"
-      />
+      <add-ticker @add-ticker="add" :duplicateCoinError="duplicateCoinError" />
+      <!-- :disabled="tooManyTickers" -->
       <button
         @click="page = page - 1"
         v-if="page > 1"
@@ -78,7 +75,11 @@
 </template>
 
 <script>
-import { subscribeToTicker, unsubscribeFromTicker } from "./api";
+import {
+  subscribeToTicker,
+  unsubscribeFromTicker,
+  closeWSConnection,
+} from "./api";
 import AddTicker from "@/components/AddTicker.vue";
 import CryptoGraph from "@/components/CryptoGraph.vue";
 
@@ -93,20 +94,21 @@ export default {
       filter: "",
       page: 1,
       duplicateCoinError: false,
+      coinsPerPage: 6,
     };
   },
   components: { AddTicker, CryptoGraph },
 
   computed: {
-    tooManyTickers() {
-      return this.tickers.length > 10;
-    },
+    // tooManyTickers() {
+    //  return this.tickers.length > 10;
+    // },
     startIndex() {
-      return (this.page - 1) * 6;
+      return (this.page - 1) * this.coinsPerPage;
     },
 
     endIndex() {
-      return this.page * 6;
+      return this.page * this.coinsPerPage;
     },
     filteredTickers() {
       return this.tickers.filter((ticker) =>
@@ -158,6 +160,10 @@ export default {
     }, 5000);
   },
 
+  beforeUnmount() {
+    closeWSConnection();
+  },
+
   methods: {
     closeGraphView() {
       this.selectedTicker = null;
@@ -190,7 +196,11 @@ export default {
     },
 
     add(ticker) {
-      if (this.tickers.find((el) => el.name === ticker)) {
+      if (
+        this.tickers.find(
+          (el) => el.name.toUpperCase() === ticker.toUpperCase()
+        )
+      ) {
         this.duplicateCoinError = true;
         setTimeout(() => {
           this.duplicateCoinError = false;
@@ -198,7 +208,7 @@ export default {
         return;
       }
 
-      const currentTicker = { name: ticker, price: "-" };
+      const currentTicker = { name: ticker.toUpperCase(), price: "-" };
       this.tickers = [...this.tickers, currentTicker];
 
       this.updateTickers(currentTicker.name);

@@ -55,8 +55,8 @@ export default {
   props: {
     graph: {
       type: Array,
-      //   required: true,
-      //   default: new Array(),
+      required: true,
+      default: new Array(),
     },
     name: {
       type: String,

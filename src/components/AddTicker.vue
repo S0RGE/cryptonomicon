@@ -12,6 +12,7 @@
             type="text"
             name="wallet"
             id="wallet"
+            style="text-transform: uppercase"
             class="block w-full pr-10 border-gray-300 text-gray-900 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md"
             placeholder="Например DOGE"
           />
@@ -31,7 +32,8 @@
         </div>
       </div>
     </div>
-    <add-button :disabled="disabled" @click="add(ticker)" class="my-4" />
+    <add-button @click="add(ticker)" class="my-4" />
+    <!-- :disabled="disabled" -->
   </section>
 </template>
 
@@ -45,11 +47,11 @@ export default {
   },
 
   props: {
-    disabled: {
-      type: Boolean,
-      required: false,
-      default: false,
-    },
+    // disabled: {
+    //   type: Boolean,
+    //   required: false,
+    //   default: false,
+    // },
     duplicateCoinError: {
       type: Boolean,
       default: false,

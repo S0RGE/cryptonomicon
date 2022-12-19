@@ -1,6 +1,6 @@
-const API_KEY =
-  "20ec8e96925186e23c6a7468ca612470ad6ba7ca1b5e6ae3fa7e85e065a1bd46";
+const API_KEY = process.env.VUE_APP_API_KEY;
 const WS_BASE_URL = "wss://streamer.cryptocompare.com/v2";
+const API_BASE_URL = "https://min-api.cryptocompare.com";
 const AGGREGATE_INDEX = "5";
 const tickersHandler = new Map();
 
@@ -63,10 +63,12 @@ export const unsubscribeFromTicker = (ticker) => {
   unsubscribeFormTickerOnWs(ticker);
 };
 
-// https://min-api.cryptocompare.com/data/blockchain/list all coins
-
 export const getAllCoinNames = async () => {
   return await fetch(
-    `https://min-api.cryptocompare.com/data/blockchain/list?api_key=${API_KEY}`
+    `${API_BASE_URL}/data/blockchain/list?api_key=${API_KEY}`
   ).then((prom) => prom.json());
+};
+
+export const closeWSConnection = () => {
+  socket.close();
 };
