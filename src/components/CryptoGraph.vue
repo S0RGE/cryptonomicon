@@ -14,8 +14,8 @@
           height: `${bar}%`,
           backgroundColor:
             normalizedGraph[idx - 1] <= normalizedGraph[idx]
-              ? '#553c9a' //puprle-800
-              : '#9b2c2c', //red-800
+              ? '#4d7c0f' //green-800
+              : '#b91c1c', //red-800
           writingMode: 'vertical-rl',
         }"
         class="bg-purple-800 border w-10"
@@ -111,11 +111,11 @@ export default {
       return resultGraph;
     },
     normalizedGraph() {
-      const maxValue = Math.max(...this.graph);
-      const minValue = Math.min(...this.graph);
+      const maxValue = Math.max(...this.bufferedGraph);
+      const minValue = Math.min(...this.bufferedGraph);
 
       if (maxValue === minValue) {
-        return this.graph.map(() => 50);
+        return this.bufferedGraph.map(() => 50);
       }
 
       return this.bufferedGraph.map(

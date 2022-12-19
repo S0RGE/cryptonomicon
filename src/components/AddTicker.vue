@@ -7,7 +7,7 @@
         >
         <div class="mt-1 relative rounded-md shadow-md">
           <input
-            v-model="ticker"
+            v-model.trim="ticker"
             @keydown.enter="add(ticker)"
             type="text"
             name="wallet"
@@ -64,13 +64,14 @@ export default {
     };
   },
 
-  async mounted() {
+  mounted() {
     // Для удаления лишних запросов к API(ограниченое количество)
     if (localStorage.getItem("coinNames")) {
       this.coinNames = JSON.parse(localStorage.getItem("coinNames"));
     } else {
-      const coinNameobject = (await getAllCoinNames()).Data;
-      this.coinNames = Object.keys(coinNameobject);
+      getAllCoinNames().then(
+        (response) => (this.coinNames = Object.keys(response.Data))
+      );
       localStorage.setItem("coinNames", JSON.stringify(this.coinNames));
     }
   },
