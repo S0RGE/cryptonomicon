@@ -32,18 +32,18 @@
         </div>
       </div>
     </div>
-    <add-button @click="add(ticker)" class="my-4" />
+    <crypto-button @click="add(ticker)" class="my-4">Добавить </crypto-button>
     <!-- :disabled="disabled" -->
   </section>
 </template>
 
 <script>
-import AddButton from "./AddButton.vue";
+import CryptoButton from "./CryptoButton.vue";
 import { getAllCoinNames } from "../api.js";
 
 export default {
   components: {
-    AddButton,
+    CryptoButton,
   },
 
   props: {

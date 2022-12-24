@@ -8,6 +8,7 @@ const tickersHandler = new Map();
 const socket = new WebSocket(`${WS_BASE_URL}?api_key=${API_KEY}`);
 
 socket.addEventListener("message", (e) => {
+  console.log(e);
   const {
     TYPE: type,
     FROMSYMBOL: currency,
@@ -33,7 +34,7 @@ function sendToWebSocket(message) {
   socket.addEventListener(
     "open",
     () => {
-      socket.send(message);
+      socket.send(strinfigiedMessage);
     },
     { once: true }
   );
@@ -68,10 +69,23 @@ export const getAllCoinNames = async () => {
   const coinNames = await fetch(
     `${API_BASE_URL}/data/blockchain/list?api_key=${API_KEY}`
   ).then((prom) => prom.json());
-  localStorage.setItem("checkCoins", JSON.stringify(coinNames));
+  localStorage.setItem("coinNames", convertCoinsResponse(coinNames));
   return coinNames;
 };
 
 export const closeWSConnection = () => {
+  unsubscribeFromWebSocket();
   socket.close();
 };
+
+function convertCoinsResponse(coins) {
+  const coinsToConvert = Object.keys(coins.Data);
+  const result = JSON.stringify(coinsToConvert);
+  return result;
+}
+
+function unsubscribeFromWebSocket() {
+  tickersHandler.forEach((coin) => {
+    unsubscribeFromTicker(coin);
+  });
+}
