@@ -145,6 +145,7 @@ export default {
         )
       ) {
         this.showError();
+        return;
       }
 
       const currentTicker = { name: ticker.toUpperCase(), price: "-" };
