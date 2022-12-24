@@ -8,7 +8,6 @@ const tickersHandler = new Map();
 const socket = new WebSocket(`${WS_BASE_URL}?api_key=${API_KEY}`);
 
 socket.addEventListener("message", (e) => {
-  console.log(e);
   const {
     TYPE: type,
     FROMSYMBOL: currency,

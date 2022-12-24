@@ -102,14 +102,9 @@ export default {
 
     const tickerData = localStorage.getItem("crypto-list");
 
-    // subscribeToTicker(currentTicker.name, (newPrice) =>
-    //     this.updateTicker(currentTicker.name, newPrice)
-    //   );
-
     if (tickerData) {
       this.tickers = JSON.parse(tickerData);
       this.tickers.forEach((ticker) => {
-        console.log(ticker.name);
         subscribeToTicker(ticker.name, (newPrice) =>
           this.updateTicker(ticker.name, newPrice)
         );
